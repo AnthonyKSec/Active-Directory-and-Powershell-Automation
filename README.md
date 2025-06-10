@@ -20,10 +20,72 @@ This project documents the step-by-step process of setting up an **Active Direct
 
 # Active Directory Deployment & PowerShell Automation 🚀
 
-## 📺 Watch the Video:
-[![AD Play Button](https://github.com/user-attachments/assets/7d9e745a-dd53-4463-9a9a-e633d0c16669)](https://www.youtube.com/watch?v=X0IN36CUVsU)
+<details>
+<summary>Click to view step-by-step Active Directory & DHCP lab setup (Windows Server 2022)</summary>
 
-- **In this video, I walk through the full setup of an Active Directory environment using Windows Server 2022 and PowerShell automation.**  
+### 🛠️ Step-by-Step Lab Setup: AD DS, DHCP, and User Provisioning on Windows Server 2022
+
+---
+
+#### 1. 🖥️ Prepare the Virtual Machine
+- Create a VM (VMware or VirtualBox)  
+- Specs: 2 CPUs, 2 GB RAM, 20 GB disk  
+- Mount the Windows Server 2022 ISO  
+- Boot and install the OS
+
+---
+
+#### 2. ⚙️ Install Windows Server 2022
+- Choose: **Standard Evaluation (Desktop Experience)**
+- Accept license terms, choose Custom install
+- Install on “Drive0 Unallocated Space”
+- Set strong Administrator password after reboot
+
+---
+
+#### 3. 🌐 Configure Network Adapters
+- Add **two** NICs:
+  - External (NAT or Bridged): for internet access
+  - Internal: for isolated lab network
+- Rename adapters in Windows
+- Set static IP for Internal adapter (e.g., `10.10.10.5/24`)
+- Set DNS to `127.0.0.1` or self IP; leave gateway blank
+
+---
+
+#### 4. 🧾 Rename Server and Reboot
+- Rename server to `DC01`
+- Reboot to apply changes
+
+---
+
+#### 5. 🧷 Optional: Take a Snapshot
+- Snapshot VM before installing roles
+- Helpful for rollback if configuration fails
+
+---
+
+#### 6. 🛡️ Install & Promote AD DS
+- Open **Server Manager → Manage → Add Roles and Features**
+- Install **Active Directory Domain Services**
+- After install, promote to domain controller
+  - Select: **Add new forest**
+  - Domain: `yourdomain.local`
+  - Set DSRM password
+- Reboot after promotion
+
+---
+
+#### 7. 📡 Install and Configure DHCP
+- Install DHCP role via Server Manager or PowerShell:
+  ```powershell
+  Install-WindowsFeature DHCP -IncludeManagementTools
+  netsh dhcp add securitygroups
+  Restart-Service dhcpserver
+  Add-DhcpServerInDC -DnsName "DC01.yourdomain.local" -IPAddress 10.10.10.5
+
+  
+- **I walk through the full setup of an Active Directory environment using Windows Server 2022 and PowerShell automation.**  
 - **From installing AD-DC to configuring users and OUs, it's all covered step by step!**
 
 ---
